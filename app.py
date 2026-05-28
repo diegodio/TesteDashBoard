@@ -72,15 +72,16 @@ st.markdown("""
     .footer-main { font-size:11px; color:#475569; }
     .footer-sub { font-size:10px; color:#334155; margin-top:4px; font-style:italic; }
 
-    /* Upload area */
     .upload-zone { background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%); border:2px dashed #818cf860; border-radius:20px; padding:60px 40px; text-align:center; margin:40px auto; max-width:700px; }
     .upload-icon { font-size:64px; margin-bottom:16px; }
     .upload-title { font-size:22px; font-weight:800; color:#e2e8f0; margin-bottom:8px; }
     .upload-sub { font-size:14px; color:#64748b; line-height:1.6; }
-    
+
     [data-testid="stFileUploader"] { max-width: 500px; margin: 0 auto; }
     [data-testid="stFileUploader"] section { border: 1px solid #1e293b !important; border-radius: 12px !important; background: #0f172a !important; }
     [data-testid="stFileUploader"] button { background: #818cf8 !important; color: white !important; border-radius: 8px !important; }
+
+    .demo-banner { background:linear-gradient(135deg,#fbbf2415,#f59e0b10); border:1px solid #fbbf2430; border-radius:10px; padding:10px 18px; margin-bottom:16px; text-align:center; font-size:12px; color:#fbbf24; font-weight:600; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -143,27 +144,83 @@ def safe_int(v, default=0):
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# TELA DE UPLOAD
+# DADOS SINTÉTICOS PARA DEMONSTRAÇÃO
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def generate_demo_data():
+    campanhas = pd.DataFrame([
+        {"Campanha": "[CONV] Meta - Lookalike Compradores 1%", "Plataforma": "Meta Ads", "Tipo": "Conversão", "Objetivo": "Leads", "Status": "Ativa", "Investimento": 5800, "Impressões": 245000, "Alcance": 118000, "Cliques": 7120, "Leads": 412, "Vendas": 53, "Valor/Venda": 385},
+        {"Campanha": "[CONV] Meta - Interesses Fitness", "Plataforma": "Meta Ads", "Tipo": "Conversão", "Objetivo": "Leads", "Status": "Ativa", "Investimento": 3400, "Impressões": 162000, "Alcance": 87000, "Cliques": 4380, "Leads": 248, "Vendas": 29, "Valor/Venda": 385},
+        {"Campanha": "[RMK] Meta - Visitou LP 14d", "Plataforma": "Meta Ads", "Tipo": "Remarketing", "Objetivo": "Leads", "Status": "Ativa", "Investimento": 1900, "Impressões": 48000, "Alcance": 21000, "Cliques": 2640, "Leads": 186, "Vendas": 31, "Valor/Venda": 420},
+        {"Campanha": "[RMK] Meta - Engajou IG 7d", "Plataforma": "Meta Ads", "Tipo": "Remarketing", "Objetivo": "Leads", "Status": "Ativa", "Investimento": 1200, "Impressões": 35000, "Alcance": 16500, "Cliques": 1890, "Leads": 124, "Vendas": 18, "Valor/Venda": 420},
+        {"Campanha": "[TRAF] Meta - Vídeo View Educativo", "Plataforma": "Meta Ads", "Tipo": "Tráfego", "Objetivo": "Views", "Status": "Ativa", "Investimento": 800, "Impressões": 92000, "Alcance": 54000, "Cliques": 1420, "Leads": 38, "Vendas": 3, "Valor/Venda": 350},
+        {"Campanha": "[SEARCH] Google - Marca", "Plataforma": "Google Ads", "Tipo": "Search", "Objetivo": "Conversões", "Status": "Ativa", "Investimento": 1100, "Impressões": 28000, "Alcance": 0, "Cliques": 3200, "Leads": 168, "Vendas": 42, "Valor/Venda": 395},
+        {"Campanha": "[SEARCH] Google - Genérica Produto", "Plataforma": "Google Ads", "Tipo": "Search", "Objetivo": "Conversões", "Status": "Ativa", "Investimento": 2800, "Impressões": 72000, "Alcance": 0, "Cliques": 3850, "Leads": 192, "Vendas": 26, "Valor/Venda": 370},
+        {"Campanha": "[SEARCH] Google - Concorrentes", "Plataforma": "Google Ads", "Tipo": "Search", "Objetivo": "Conversões", "Status": "Teste", "Investimento": 950, "Impressões": 31000, "Alcance": 0, "Cliques": 1180, "Leads": 54, "Vendas": 7, "Valor/Venda": 360},
+        {"Campanha": "[DISPLAY] Google - Remarketing", "Plataforma": "Google Ads", "Tipo": "Display", "Objetivo": "Conversões", "Status": "Ativa", "Investimento": 750, "Impressões": 185000, "Alcance": 0, "Cliques": 920, "Leads": 41, "Vendas": 5, "Valor/Venda": 380},
+        {"Campanha": "[PMAX] Google - Performance Max", "Plataforma": "Google Ads", "Tipo": "PMax", "Objetivo": "Conversões", "Status": "Teste", "Investimento": 1400, "Impressões": 110000, "Alcance": 0, "Cliques": 2100, "Leads": 87, "Vendas": 11, "Valor/Venda": 390},
+        {"Campanha": "[CONV] TikTok - UGC Jovem", "Plataforma": "TikTok Ads", "Tipo": "Conversão", "Objetivo": "Leads", "Status": "Ativa", "Investimento": 1600, "Impressões": 320000, "Alcance": 195000, "Cliques": 4800, "Leads": 156, "Vendas": 12, "Valor/Venda": 310},
+        {"Campanha": "[MSG] WhatsApp - Base Reativação", "Plataforma": "Meta Ads", "Tipo": "Mensagens", "Objetivo": "Vendas", "Status": "Pausada", "Investimento": 450, "Impressões": 12000, "Alcance": 5800, "Cliques": 480, "Leads": 62, "Vendas": 14, "Valor/Venda": 280},
+    ])
+    campanhas["Faturamento"] = campanhas["Vendas"] * campanhas["Valor/Venda"]
+    campanhas["CTR"] = campanhas.apply(lambda r: safe_div(r["Cliques"], r["Impressões"]) * 100, axis=1)
+    campanhas["CPC"] = campanhas.apply(lambda r: safe_div(r["Investimento"], r["Cliques"]), axis=1)
+    campanhas["CPM"] = campanhas.apply(lambda r: safe_div(r["Investimento"], r["Impressões"]) * 1000, axis=1)
+    campanhas["CPL"] = campanhas.apply(lambda r: safe_div(r["Investimento"], r["Leads"]), axis=1)
+    campanhas["ROAS"] = campanhas.apply(lambda r: safe_div(r["Faturamento"], r["Investimento"]), axis=1)
+
+    historico = pd.DataFrame([
+        {"Mês": "Out/2025", "Investimento": 14200, "Impressões": 820000, "Cliques": 22400, "Leads": 1120, "Vendas": 145, "Faturamento": 54750},
+        {"Mês": "Nov/2025", "Investimento": 16800, "Impressões": 940000, "Cliques": 26100, "Leads": 1340, "Vendas": 172, "Faturamento": 66040},
+        {"Mês": "Dez/2025", "Investimento": 19500, "Impressões": 1080000, "Cliques": 28900, "Leads": 1480, "Vendas": 198, "Faturamento": 77220},
+        {"Mês": "Jan/2026", "Investimento": 17200, "Impressões": 960000, "Cliques": 25600, "Leads": 1290, "Vendas": 168, "Faturamento": 65520},
+        {"Mês": "Fev/2026", "Investimento": 18900, "Impressões": 1020000, "Cliques": 28200, "Leads": 1420, "Vendas": 189, "Faturamento": 73710},
+        {"Mês": "Mar/2026", "Investimento": 22150, "Impressões": 1340000, "Cliques": 33980, "Leads": 1768, "Vendas": 251, "Faturamento": 96395},
+    ])
+    historico["CPL"] = historico.apply(lambda r: safe_div(r["Investimento"], r["Leads"]), axis=1)
+    historico["CPA"] = historico.apply(lambda r: safe_div(r["Investimento"], r["Vendas"]), axis=1)
+    historico["ROAS"] = historico.apply(lambda r: safe_div(r["Faturamento"], r["Investimento"]), axis=1)
+
+    config = {
+        "cliente": "FitPro Academy (DEMO)",
+        "gestor": "Gestor Demonstração",
+        "periodo": "01/03/2026 a 31/03/2026",
+        "observacoes": [
+            "Lookalike de compradores continua sendo o público com melhor CPL — R$ 14,08. Recomendo escalar em 20%.",
+            "Remarketing de visitantes da LP teve ROAS de 6,83 — melhor retorno do mês. Criativos de depoimento puxaram o resultado.",
+            "Campanha WhatsApp pausada por esgotamento da base. Reativar após nova captação de leads pelo funil orgânico.",
+            "Google Search Marca mantém CPA baixíssimo (R$ 26,19). É a campanha mais eficiente em custo por venda.",
+            "TikTok Ads com CPL de R$ 10,26 porém taxa de conversão baixa (7,7%). Leads precisam de mais aquecimento antes da oferta.",
+            "PMAX ainda em aprendizado — manter por mais 2 semanas antes de avaliar corte.",
+        ],
+        "proximos_passos": [
+            "Escalar Lookalike Compradores 1% em 20% de orçamento — manter CPL abaixo de R$ 16.",
+            "Produzir 3 novos criativos em formato UGC para Meta e TikTok baseados nos depoimentos top.",
+            "Criar sequência de e-mails de nutrição para leads do TikTok antes de direcionar para venda.",
+            "Testar público lookalike 2% no Meta para ampliar alcance sem perder qualidade.",
+            "Implementar Enhanced Conversions no Google Ads para melhorar otimização de campanhas Search.",
+            "Agendar reunião de resultados com cliente na primeira semana de abril.",
+        ],
+    }
+    return campanhas, historico, config
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# CARREGAMENTO DO EXCEL
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def load_data(file):
-    """Carrega e processa o Excel."""
     xls = pd.ExcelFile(file)
-    
-    # Aba Campanhas
     df = pd.read_excel(xls, sheet_name="Campanhas")
-    # Remove linha de TOTAL se existir
     df = df[df["Campanha"].astype(str).str.upper() != "TOTAL"].copy()
     df = df.dropna(subset=["Campanha"]).reset_index(drop=True)
-    
-    # Garante colunas numéricas
+
     num_cols = ["Investimento", "Impressões", "Alcance", "Cliques", "Leads", "Vendas", "Valor/Venda",
                 "CTR", "CPC", "CPM", "CPL", "Faturamento", "ROAS", "Frequência"]
     for c in num_cols:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0)
-    
-    # Recalcula métricas derivadas (caso venham zeradas ou ausentes)
+
     if "Faturamento" not in df.columns or df["Faturamento"].sum() == 0:
         df["Faturamento"] = df["Vendas"] * df["Valor/Venda"]
     if "CTR" not in df.columns or df["CTR"].sum() == 0:
@@ -176,16 +233,14 @@ def load_data(file):
         df["CPL"] = df.apply(lambda r: safe_div(r["Investimento"], r["Leads"]), axis=1)
     if "ROAS" not in df.columns or df["ROAS"].sum() == 0:
         df["ROAS"] = df.apply(lambda r: safe_div(r["Faturamento"], r["Investimento"]), axis=1)
-    
-    # Aba Histórico (opcional)
+
     hist = None
     if "Histórico Mensal" in xls.sheet_names:
         hist = pd.read_excel(xls, sheet_name="Histórico Mensal")
         for c in ["Investimento", "Impressões", "Cliques", "Leads", "Vendas", "Faturamento", "CPL", "CPA", "ROAS"]:
             if c in hist.columns:
                 hist[c] = pd.to_numeric(hist[c], errors="coerce").fillna(0)
-    
-    # Aba Configurações (opcional)
+
     config = {"cliente": "Cliente", "gestor": "Gestor", "periodo": "Período"}
     if "Configurações" in xls.sheet_names:
         cfg = pd.read_excel(xls, sheet_name="Configurações", header=None)
@@ -193,8 +248,7 @@ def load_data(file):
         config["cliente"] = cfg_dict.get("Nome do Cliente", "Cliente")
         config["gestor"] = cfg_dict.get("Gestor Responsável", "Gestor")
         config["periodo"] = cfg_dict.get("Período do Relatório", "Período")
-        
-        # Observações e próximos passos
+
         obs, passos = [], []
         in_obs, in_passos = False, False
         for _, row in cfg.iterrows():
@@ -215,7 +269,7 @@ def load_data(file):
                 passos.append(val)
         config["observacoes"] = obs
         config["proximos_passos"] = passos
-    
+
     return df, hist, config
 
 
@@ -224,20 +278,19 @@ def load_data(file):
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 if "df" not in st.session_state:
-    # ── TELA DE UPLOAD ──
     st.markdown("")
     st.markdown("""
     <div class="upload-zone">
         <div class="upload-icon">📊</div>
         <div class="upload-title">Relatório de Tráfego Pago</div>
         <div class="upload-sub">
-            <br>
+            Estilo Comunidade Sobral de Tráfego<br>
             <span style="color:#818cf8;font-weight:600;">Faça upload do seu arquivo Excel (.xlsx)</span> com os dados das campanhas
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    col_up = st.columns([1,2,1])[1]
+    col_up = st.columns([1, 2, 1])[1]
     with col_up:
         uploaded = st.file_uploader("", type=["xlsx", "xls"], label_visibility="collapsed")
         if uploaded:
@@ -246,9 +299,19 @@ if "df" not in st.session_state:
                 st.session_state["df"] = df
                 st.session_state["hist"] = hist
                 st.session_state["config"] = config
+                st.session_state["is_demo"] = False
                 st.rerun()
             except Exception as e:
                 st.error(f"Erro ao processar o arquivo: {e}")
+
+        st.markdown("")
+        if st.button("🧪 Demonstração com dados sintéticos", use_container_width=True, type="secondary"):
+            df_demo, hist_demo, config_demo = generate_demo_data()
+            st.session_state["df"] = df_demo
+            st.session_state["hist"] = hist_demo
+            st.session_state["config"] = config_demo
+            st.session_state["is_demo"] = True
+            st.rerun()
 
     st.markdown("""
     <div style="text-align:center;margin-top:24px;padding:20px;">
@@ -271,8 +334,8 @@ if "df" not in st.session_state:
 df = st.session_state["df"]
 hist = st.session_state.get("hist")
 config = st.session_state["config"]
+is_demo = st.session_state.get("is_demo", False)
 
-# Totais gerais
 inv_total = df["Investimento"].sum()
 leads_total = safe_int(df["Leads"].sum())
 vendas_total = safe_int(df["Vendas"].sum())
@@ -287,20 +350,20 @@ cpa_total = safe_div(inv_total, vendas_total)
 taxa_conv = safe_div(vendas_total, leads_total) * 100
 ticket_medio = safe_div(fat_total, vendas_total)
 lucro_bruto = fat_total - inv_total
-ctr_total = safe_div(cliques_total, impressoes_total) * 100
-cpc_total = safe_div(inv_total, cliques_total)
-cpm_total = safe_div(inv_total, impressoes_total) * 1000
 
-# Plataformas
 has_plataforma = "Plataforma" in df.columns
 if has_plataforma:
-    plataformas = df.groupby("Plataforma").agg({"Investimento": "sum", "Leads": "sum", "Vendas": "sum", "Faturamento": "sum", "Cliques": "sum", "Impressões": "sum"}).reset_index()
+    plataformas = df.groupby("Plataforma").agg(
+        {"Investimento": "sum", "Leads": "sum", "Vendas": "sum", "Faturamento": "sum", "Cliques": "sum", "Impressões": "sum"}
+    ).reset_index()
 
-# Botão trocar arquivo
-col_btn = st.columns([6,1])
+if is_demo:
+    st.markdown('<div class="demo-banner">⚠️ MODO DEMONSTRAÇÃO — Dados sintéticos para visualização do layout. Faça upload do seu Excel para ver seus dados reais.</div>', unsafe_allow_html=True)
+
+col_btn = st.columns([6, 1])
 with col_btn[1]:
     if st.button("🔄 Trocar arquivo", use_container_width=True):
-        for k in ["df", "hist", "config"]:
+        for k in ["df", "hist", "config", "is_demo"]:
             st.session_state.pop(k, None)
         st.rerun()
 
@@ -321,8 +384,6 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-
-# ── TABS ──
 tab_visao, tab_campanhas, tab_plataformas, tab_criativos, tab_plano = st.tabs([
     "📈 Visão Geral", "📋 Campanhas", "📱 Plataformas", "🏆 Top Campanhas", "🎯 Plano de Ação",
 ])
@@ -354,30 +415,28 @@ with tab_visao:
 
     st.markdown("")
 
-    # Evolução mensal (se houver)
     if hist is not None and not hist.empty:
         st.markdown('<div class="section-header"><span class="section-bar" style="background:#34d399;"></span> Evolução Mensal</div>', unsafe_allow_html=True)
         gc1, gc2, gc3 = st.columns(3)
         with gc1:
-            fig = go.Figure(go.Bar(x=hist["Mês"], y=hist["Leads"], marker=dict(color="#34d399", cornerradius=6), text=hist["Leads"].astype(int), textposition="outside", textfont=dict(color="#94a3b8", size=10)))
+            fig = go.Figure(go.Bar(x=hist["Mês"].tolist(), y=hist["Leads"].tolist(), marker=dict(color="#34d399", cornerradius=6), text=hist["Leads"].astype(int).tolist(), textposition="outside", textfont=dict(color="#94a3b8", size=10)))
             fig.update_layout(title=dict(text="Leads", font=dict(size=13, color="#64748b")))
             plotly_dark(fig); st.plotly_chart(fig, use_container_width=True)
         with gc2:
-            fig = go.Figure(go.Bar(x=hist["Mês"], y=hist["Vendas"], marker=dict(color="#818cf8", cornerradius=6), text=hist["Vendas"].astype(int), textposition="outside", textfont=dict(color="#94a3b8", size=10)))
+            fig = go.Figure(go.Bar(x=hist["Mês"].tolist(), y=hist["Vendas"].tolist(), marker=dict(color="#818cf8", cornerradius=6), text=hist["Vendas"].astype(int).tolist(), textposition="outside", textfont=dict(color="#94a3b8", size=10)))
             fig.update_layout(title=dict(text="Vendas", font=dict(size=13, color="#64748b")))
             plotly_dark(fig); st.plotly_chart(fig, use_container_width=True)
         with gc3:
-            fig = go.Figure(go.Bar(x=hist["Mês"], y=hist["Investimento"], marker=dict(color="#f59e0b", cornerradius=6), text=[f"R${v/1000:.1f}k" for v in hist["Investimento"]], textposition="outside", textfont=dict(color="#94a3b8", size=10)))
+            fig = go.Figure(go.Bar(x=hist["Mês"].tolist(), y=hist["Investimento"].tolist(), marker=dict(color="#f59e0b", cornerradius=6), text=[f"R${v/1000:.1f}k" for v in hist["Investimento"]], textposition="outside", textfont=dict(color="#94a3b8", size=10)))
             fig.update_layout(title=dict(text="Investimento", font=dict(size=13, color="#64748b")))
             plotly_dark(fig); st.plotly_chart(fig, use_container_width=True)
 
-    # Distribuição por plataforma
     if has_plataforma and len(plataformas) > 1:
         st.markdown('<div class="section-header"><span class="section-bar" style="background:#f59e0b;"></span> Distribuição de Investimento</div>', unsafe_allow_html=True)
         di1, di2 = st.columns(2)
         colors_list = ["#818cf8", "#34d399", "#f59e0b", "#f87171", "#a78bfa", "#fb923c"]
         with di1:
-            fig = go.Figure(go.Pie(labels=plataformas["Plataforma"], values=plataformas["Investimento"], marker=dict(colors=colors_list[:len(plataformas)]), hole=0.55, textinfo="label+percent", textfont=dict(color="#e2e8f0", size=11)))
+            fig = go.Figure(go.Pie(labels=plataformas["Plataforma"].tolist(), values=plataformas["Investimento"].tolist(), marker=dict(colors=colors_list[:len(plataformas)]), hole=0.55, textinfo="label+percent", textfont=dict(color="#e2e8f0", size=11)))
             fig.update_layout(showlegend=False); plotly_dark(fig, 300); st.plotly_chart(fig, use_container_width=True)
         with di2:
             bars_html = ""
@@ -403,7 +462,6 @@ with tab_visao:
 with tab_campanhas:
     st.markdown('<div class="section-header"><span class="section-bar" style="background:#818cf8;"></span> Todas as Campanhas</div>', unsafe_allow_html=True)
 
-    # Tabela HTML
     th_style = "padding:12px;text-align:right;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;"
     rows = ""
     for _, r in df.iterrows():
@@ -448,11 +506,10 @@ with tab_campanhas:
 
     st.markdown("")
 
-    # Gráfico CPL
     st.markdown('<div class="section-header"><span class="section-bar" style="background:#a78bfa;"></span> CPL por Campanha</div>', unsafe_allow_html=True)
     sorted_df = df.sort_values("CPL", ascending=True)
     fig = go.Figure(go.Bar(
-        y=sorted_df["Campanha"].str[:35], x=sorted_df["CPL"], orientation="h",
+        y=sorted_df["Campanha"].str[:35].tolist(), x=sorted_df["CPL"].tolist(), orientation="h",
         marker=dict(color=["#34d399" if v < 15 else ("#fbbf24" if v < 30 else "#f87171") for v in sorted_df["CPL"]], cornerradius=4),
         text=[fmt_brl(v) for v in sorted_df["CPL"]], textposition="outside", textfont=dict(color="#94a3b8", size=10),
     ))
@@ -472,8 +529,6 @@ with tab_plataformas:
             plat_leads = safe_int(plat_row["Leads"])
             plat_vendas = safe_int(plat_row["Vendas"])
             plat_fat = plat_row["Faturamento"]
-            plat_cliques = safe_int(plat_row["Cliques"])
-            plat_impr = safe_int(plat_row["Impressões"])
 
             st.markdown(f'<div class="section-header"><span class="section-bar" style="background:#818cf8;"></span> {plat_name}</div>', unsafe_allow_html=True)
 
@@ -484,7 +539,6 @@ with tab_plataformas:
             p4.metric("Faturamento", fmt_brl(plat_fat))
             p5.metric("ROAS", f"{safe_div(plat_fat, plat_inv):.2f}x")
 
-            # Mini tabela
             p_rows = ""
             for _, r in plat_df.iterrows():
                 status = r.get("Status", "-") if "Status" in df.columns else "-"
@@ -567,15 +621,38 @@ with tab_criativos:
 
     st.markdown("")
 
-    # Gráfico scatter: Investimento x ROAS
+    # ── GRÁFICO SCATTER CORRIGIDO ──
+    # Erro original: colorbar=dict(title="ROAS", titlefont=dict(...))
+    # titlefont foi removido em versões recentes do Plotly.
+    # Correção: usar title=dict(text=..., font=dict(...))
+    # Também convertemos todas as Series para .tolist() para evitar
+    # problemas de serialização com pandas em Python 3.14+
     st.markdown('<div class="section-header"><span class="section-bar" style="background:#34d399;"></span> Investimento vs ROAS</div>', unsafe_allow_html=True)
+
+    scatter_sizes = [max(s, 3) * 1.5 for s in df["Vendas"].tolist()]
+    scatter_colors = df["ROAS"].tolist()
+
     fig = go.Figure(go.Scatter(
-        x=df["Investimento"], y=df["ROAS"],
-        mode="markers+text", text=df["Campanha"].str[:20],
-        textposition="top center", textfont=dict(color="#94a3b8", size=9),
-        marker=dict(size=df["Vendas"].clip(lower=5) * 1.5, color=df["ROAS"], colorscale=[[0,"#f87171"],[0.5,"#fbbf24"],[1,"#34d399"]], showscale=True, colorbar=dict(title="ROAS", titlefont=dict(color="#94a3b8"), tickfont=dict(color="#94a3b8"))),
+        x=df["Investimento"].tolist(),
+        y=df["ROAS"].tolist(),
+        mode="markers+text",
+        text=df["Campanha"].str[:20].tolist(),
+        textposition="top center",
+        textfont=dict(color="#94a3b8", size=9),
+        marker=dict(
+            size=scatter_sizes,
+            color=scatter_colors,
+            colorscale=[[0, "#f87171"], [0.5, "#fbbf24"], [1, "#34d399"]],
+            showscale=True,
+            colorbar=dict(
+                title=dict(text="ROAS", font=dict(color="#94a3b8")),
+                tickfont=dict(color="#94a3b8"),
+            ),
+        ),
     ))
-    plotly_dark(fig, 400); fig.update_xaxis(title="Investimento (R$)"); fig.update_yaxis(title="ROAS")
+    plotly_dark(fig, 400)
+    fig.update_xaxis(title="Investimento (R$)")
+    fig.update_yaxis(title="ROAS")
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -605,13 +682,25 @@ with tab_plano:
     if not obs_list and not passos_list:
         st.info("Adicione a aba **Configurações** ao seu Excel com as seções 'OBSERVAÇÕES DO GESTOR' e 'PRÓXIMOS PASSOS' para ver o plano de ação aqui.")
 
-    # Tendência (se houver histórico)
     if hist is not None and not hist.empty:
         st.markdown('<div class="section-header"><span class="section-bar" style="background:#a78bfa;"></span> Tendência de Crescimento</div>', unsafe_allow_html=True)
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=hist["Mês"], y=hist["Faturamento"], mode="lines+markers+text", name="Faturamento", line=dict(color="#818cf8", width=3), marker=dict(size=8), text=[f"R${v/1000:.0f}k" for v in hist["Faturamento"]], textposition="top center", textfont=dict(color="#94a3b8", size=10)))
-        fig.add_trace(go.Scatter(x=hist["Mês"], y=hist["Investimento"], mode="lines+markers+text", name="Investimento", line=dict(color="#f59e0b", width=2, dash="dot"), marker=dict(size=6), text=[f"R${v/1000:.1f}k" for v in hist["Investimento"]], textposition="bottom center", textfont=dict(color="#94a3b8", size=9)))
-        plotly_dark(fig, 320); fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        fig.add_trace(go.Scatter(
+            x=hist["Mês"].tolist(), y=hist["Faturamento"].tolist(),
+            mode="lines+markers+text", name="Faturamento",
+            line=dict(color="#818cf8", width=3), marker=dict(size=8),
+            text=[f"R${v/1000:.0f}k" for v in hist["Faturamento"]],
+            textposition="top center", textfont=dict(color="#94a3b8", size=10),
+        ))
+        fig.add_trace(go.Scatter(
+            x=hist["Mês"].tolist(), y=hist["Investimento"].tolist(),
+            mode="lines+markers+text", name="Investimento",
+            line=dict(color="#f59e0b", width=2, dash="dot"), marker=dict(size=6),
+            text=[f"R${v/1000:.1f}k" for v in hist["Investimento"]],
+            textposition="bottom center", textfont=dict(color="#94a3b8", size=9),
+        ))
+        plotly_dark(fig, 320)
+        fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
         st.plotly_chart(fig, use_container_width=True)
 
 
