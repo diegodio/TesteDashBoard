@@ -651,8 +651,10 @@ with tab_criativos:
         ),
     ))
     plotly_dark(fig, 400)
-    fig.update_xaxis(title="Investimento (R$)")
-    fig.update_yaxis(title="ROAS")
+    fig.update_layout(
+        xaxis_title="Investimento (R$)",
+        yaxis_title="ROAS",
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
