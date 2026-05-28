@@ -709,7 +709,7 @@ with tab_plano:
 # ── FOOTER ──
 st.markdown(f"""
 <div class="report-footer">
-    <div class="footer-main">Relatório gerado por {config['gestor']} • Estilo Comunidade Sobral de Tráfego</div>
+    <div class="footer-main">Relatório gerado por Aftermath</div>
     <div class="footer-sub">"Coleta → Análise → Ação" — O ciclo que gera resultado.</div>
 </div>
 """, unsafe_allow_html=True)
