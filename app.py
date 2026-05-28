@@ -231,7 +231,7 @@ if "df" not in st.session_state:
         <div class="upload-icon">📊</div>
         <div class="upload-title">Relatório de Tráfego Pago</div>
         <div class="upload-sub">
-            Estilo Comunidade Sobral de Tráfego<br>
+            <br>
             <span style="color:#818cf8;font-weight:600;">Faça upload do seu arquivo Excel (.xlsx)</span> com os dados das campanhas
         </div>
     </div>
